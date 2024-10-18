@@ -16,13 +16,10 @@ Chuxin-Embedding 是专为增强中文文本检索能力而设计的嵌入模型
 - 在收集的公开亿级检索数据集上实现了微调。
   - 使用BGE finetune [Code](https://github.com/FlagOpen/FlagEmbedding/tree/master/examples/finetune) 完成微调。
 - 在收集的公开百万级检索数据集和百万级LLM合成数据集上实现了精调。
-  - 使用BGE finetune [Code](https://github.com/FlagOpen/FlagEmbedding/tree/master/examples/finetune) 和 BGE unified_finetune [Code](https://github.com/FlagOpen/FlagEmbedding/tree/master/examples/unified_finetune) 完成精调。
-  - 通过 LLM (QWEN-72B) 进行数据生成，使用 LLM 为message生成新query
-  - 数据清洗：
-    - 简单的基于规则清洗
-    - LLM判断是否可作为搜索引擎查询的query 
-    - rerank模型对(query,message)评分，舍弃pos中的负例，neg中的正例
-    
+  - 使用BGE finetune [Code](https://github.com/FlagOpen/FlagEmbedding/tree/master/examples/finetune) 在百万级公开检索数据集上进行了精调。
+  - 使用BGE unified_finetune [Code](https://github.com/FlagOpen/FlagEmbedding/tree/master/examples/unified_finetune) 在BGE-M3 公开数据集上进行了精调。
+  - 通过 LLM (QWEN-72B) 进行数据生成和质量控制，使用BGE unified_finetune 在合成数据上重复了精调过程。
+
 ## Collect more data for retrieval-type tasks
 1. 预训练数据
       - ChineseWebText、 oasis、 oscar、 SkyPile、 wudao 
