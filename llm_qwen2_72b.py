@@ -54,7 +54,6 @@ query_prompt_02 = """
 您已经阅读了"positive_document"的内容，根据以上要求生成一个单独的通用搜索查询问题“user_query”, 请注意"user_query"仅为一个单独的问题，不要包含多个问题"。
 您的输出必须始终是一个字符串，不要解释自己或输出任何其他内容。"""
 
-query_prompt = system_prompt + "文档2:{}"
 
 model_path = "/path/models--Qwen--Qwen2-72B-Instruct/snapshots/1af63c698f59c4235668ec9c1395468cb7cd7e79"
 file_path = sys.argv[1]
@@ -71,13 +70,13 @@ if os.path.isdir(file_path):
     for i in file_path_r_list:
         with open(i, 'r') as jsonl_files:
             for line in tqdm(jsonl_files):
-                data = json.loads(line)
-                total_doc_res.append(data)
+                data = json.loads(line)["pos"]
+                total_doc_res.extend(data)
 else:
     with open(file_path, 'r') as jsonl_files:
         for line in tqdm(jsonl_files):
-            data = json.loads(line)
-            total_doc_res.append(data)
+            data = json.loads(line)["pos"]
+            total_doc_res.extend(data)
 
 
 
@@ -102,7 +101,7 @@ with open(data_path_base+f"_{local_rank}_qwen2_72b.json", 'w') as jsonl_file_w:
     total_doc_sub = total_doc_res[local_rank::portioning]
     for start_index in tqdm(range(0, len(total_doc_sub),batch_size), desc="Batches", disable=len(total_doc_sub)<256):
         data_batch = total_doc_sub[start_index:start_index + batch_size]
-        data_batch_character_prompt = [character_prompt.format(data["pos"][0][:512]) for data in data_batch]
+        data_batch_character_prompt = [character_prompt.format(data[:512]) for data in data_batch]
         
         character_token_batch = []
         for data in data_batch_character_prompt:
@@ -121,10 +120,10 @@ with open(data_path_base+f"_{local_rank}_qwen2_72b.json", 'w') as jsonl_file_w:
         chars = [i.outputs[0].text for i in character_outputs]
         try:
             chars_dict = [{item.split('。')[0].split("：")[0]:item.split('。')[0].split("：")[1], item.split('。')[1].split("：")[0]:item.split('。')[1].split("：")[1],item.split('。')[2].split("：")[0]:item.split('。')[2].split("：")[1]} for item in chars]
-            data_batch_query_prompt = [query_prompt.format(data, char["角色"], char["场景"], instr.get(char["类别"],"问题"),instr.get(char["类别"],"问题"),instr.get(char["类别"],"问题")) for data,char in zip(data_batch,chars_dict)]
+            data_batch_query_prompt = [query_prompt.format(data[:512], char["角色"], char["场景"], instr.get(char["类别"],"问题"),instr.get(char["类别"],"问题"),instr.get(char["类别"],"问题")) for data,char in zip(data_batch,chars_dict)]
             
         except:
-            data_batch_query_prompt = [query_prompt_02.format(data) for data in data_batch]
+            data_batch_query_prompt = [query_prompt_02.format(data[:512]) for data in data_batch]
 
         token_batch = []
         for data in data_batch_query_prompt:
