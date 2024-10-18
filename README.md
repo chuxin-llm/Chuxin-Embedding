@@ -4,7 +4,7 @@
 Chuxin-Embedding 是专为增强中文文本检索能力而设计的嵌入模型。它基于bge-m3-retromae[1]，实现了预训练、微调、精调全流程。该模型在来自各个领域的大量语料库上进行训练，语料库的批量非常大。截至 2024 年 9 月 14 日, Chuxin-Embedding 在检索任务中表现出色，在 C-MTEB 中文检索排行榜上排名第一，领先的性能得分为 77.88，在AIR-Bench中文检索+重排序公开排行榜上排名第一，领先的性能得分为 64.78。
 
 ## News
-- 2024/9/14: LLM生成及数据清洗 [Code](https://github.com/chuxin-llm/Chuxin-Embedding) coming soon 。
+- 2024/9/14: LLM生成及数据清洗 [Code](https://github.com/chuxin-llm/Chuxin-Embedding) 。
 - 2024/9/14: 团队的RAG框架欢迎试用 [ragnify](https://github.com/chuxin-llm/ragnify) 。 
 
 ## Training Details
